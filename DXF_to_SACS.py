@@ -8,7 +8,6 @@ import math
 # GLOBAL CONFIGURATIONS
 # =================================================================
 ROUND_DECIMALS = 3       # Base tolerance to merge identical nodes (1 mm)
-#hola todosssssss
 
 # =================================================================
 # AUTOMATIC DXF FILE SEARCH AND NAME GENERATION
