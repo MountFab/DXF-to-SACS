@@ -109,6 +109,10 @@ def format_sacs_coord(val):
             s = str(int(val)) + "."
             
     return f"{s:>7}"
+# Storage unit for layer to Group mapping
+detected_groups = set()
+# list to sotre member in order
+members_database = []
 
 # Reading all LINE entities
 for line in msp.query("LINE"):
@@ -118,6 +122,19 @@ for line in msp.query("LINE"):
     n1 = get_node(p1)
     n2 = get_node(p2)
     members.append((n1, n2))
+
+    # --- STEP 2: STRING MANIPULATION & STORAGE ---
+    # Get the raw layer name from AutoCAD (e.g., "Frames Upper")
+    raw_layer = line.dxf.layer  
+    
+    # Clean it: uppercase, replace spaces with underscores, slice the first 3 characters
+    sacs_group = raw_layer.strip().upper().replace(" ", "_")[:3] 
+    
+    # Add the 3-letter group to our unique set
+    detected_groups.add(sacs_group)
+    
+    # Pack the member data into a tuple and append it to our list
+    members_database.append((n1, n2, sacs_group))
 
 # =================================================================
 # QUALITY CHECK: CLOSE NODES DETECTION (POTENTIAL CAD ERROR)
@@ -159,7 +176,7 @@ with open(OUTPUT_FILE, "w") as f:
     
     # 4. DISPLAY LOAD COMBINATION / LCSEL BLOCK
     f.write("*******************************************************************************\n")
-    f.write("*                      DISPLAY LOAD COMBINATION                               *\n")
+    f.write("* DISPLAY LOAD COMBINATION                      *\n")
     f.write("***************************************************************************** \n")
     f.write("LCSEL\n")
     
@@ -167,12 +184,24 @@ with open(OUTPUT_FILE, "w") as f:
     f.write("**************************************************************************** \n")
     f.write("SECT\n")
     f.write("**************************************************************************** \n")
-    f.write("GROUP\n")
-    
-    # 6. MEMBER BLOCK
+    f.write("GRUP\n")
+
+    # --- STEP 3: WRITING GROUPS FIRST (Fixed f_out to f) ---
+    # 'sorted()' organizes our unique groups alphabetically (e.g., COO, COV, FRM)
+    for group in sorted(detected_groups):
+        # 'GRUP' (4 chars) + 2 spaces = group name starts precisely at column 7
+        f.write(f"GRUP {group}\n")
+
+    f.write("**************************************************************************** \n")
     f.write("MEMBER\n")
-    for n1, n2 in members:
-        f.write(f"MEMBER {n1}{n2}\n")
+
+    # --- STEP 4: WRITING MEMBERS (Fixed f_out to f) ---
+    # We unpack the 3 items from each tuple inside our list
+    for n_start, n_end, group_id in members_database:
+        riga_member = f"MEMBER {n_start:>4}{n_end:>4} {group_id:<3}\n"
+        f.write(riga_member)
+    
+    # Note: Old "6. MEMBER BLOCK" loop removed here to prevent duplicate entries!
     
     # 7. SEPARATION LINE BETWEEN MEMBER AND JOINT
     f.write("**************************************************************************** \n")
@@ -215,7 +244,7 @@ print(f"File {OUTPUT_FILE} SUCCESSFULLY GENERATED! Total nodes: {num_nodi}, Tota
 # PRINT WARNINGS IF CLOSE NODES ARE FOUND BASED ON USER THRESHOLD
 if nodi_troppo_vicini:
     print("\n" + "!" * 80)
-    print(f"⚠️  WARNING ⚠️ : POTENTIAL CAD DRAWING ERRORS DETECTED!")
+    print(f"⚠️  WARNING : POTENTIAL CAD DRAWING ERRORS DETECTED!")
     print(f"The following nodes are LESS than {SOGLIA_AVVISO_MM} mm apart:")
     for id1, id2, d_mm in nodi_troppo_vicini:
         print(f"  - {id1} and {id2} -> Distance: {d_mm:.1f} mm")
