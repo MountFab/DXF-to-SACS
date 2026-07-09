@@ -23,6 +23,7 @@ To ensure a perfect conversion, please prepare your DXF file following these sim
 1. **Use LINE Entities Only:** The script reads standard `LINE` elements. Ensure your wireframe structural model doesn't use polylines, arcs, or 3D solids.
 2. **Draw in Millimeters:** The script assumes your CAD workspace is set up in millimeters ($1 \text{ unit} = 1 \text{ mm}$).
 3. **Use Object Snap:** Always use `Endpoint` snap when joining lines. This prevents the generation of unwanted duplicate nodes.
+4. **DXF Format:** Export or save your AutoCAD file as a `.dxf` file using the **Save As** (`SAVEAS`) command. Any recent DXF version (e.g., AutoCAD 2018 DXF or newer) works perfectly with the script.
 
 ---
 
