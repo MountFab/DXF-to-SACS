@@ -32,7 +32,7 @@ Because company PCs often have strict IT policies regarding unknown executable f
 
 ### Option A: The Ready-to-Use Executable (Fastest)
 1. Go to the **Releases** section on the right side of this page.
-2. Download the compressed `DXF_to_SACS.exe` file.
+2. Download the compressed archive **`v3.1.0.zip`**. It contains both the executable (`DXF_to_SACSv2.exe`) and a sample CAD file (`sample_frame.dxf`) ready for immediate testing.
 3. Place your `.dxf` file and the `.exe` in the **same folder**.
 4. Double-click the `.exe` to run it. *(Note: Windows SmartScreen might flag it as an "unknown publisher" because it lacks a paid digital certificate. You can safely bypass this).*
 5. A `sacinp.` file will be created in the same folder.
