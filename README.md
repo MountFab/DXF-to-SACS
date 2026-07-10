@@ -45,29 +45,29 @@ To ensure a perfect conversion, please prepare your DXF file following these sim
 
 Because company PCs often have strict IT policies regarding unknown executable files, you have two ways to run this tool:
 
-### Option A: The Ready-to-Use Executable (Fastest)
+### Option A: Run the Python Script (Recommended)
 
-1. **Go to Releases:** Navigate to the **Releases** section on the right side of this repository page.
-2. **Download the ZIP:** Download the compressed archive **`v1.2.0.zip`**. It contains the executable (`DXF_to_SACS.exe`) and sample CAD files ready for immediate testing.
-3. **Extract the Archive:** Unzip the folder anywhere on your computer. 
-   * *To run the test:* the `.exe` and the sample DXF files are already placed together.
-   * *To run your own model:* copy your custom `.dxf` file into this **same folder** alongside the `.exe`.
-4. **Run the Tool:** Double-click the `.exe` file to run the converter.
-   * ⚠️ *Note: Windows SmartScreen might flag it as an "unknown publisher" because it lacks a paid digital certificate. You can safely bypass this by clicking **"More info"** and then **"Run anyway"**.*
-5. **Output Generation:** Follow the quick on-screen prompts. A fully compatible `sacinp.*` text file will be automatically created in the exact same folder.
-
-### Option B: Run the Python Script (Fully Transparent)
-
-If you prefer not to run pre-compiled binaries on your machine, you can inspect and run the raw Python code directly:
+If you already have Python installed, this is the most transparent and flexible option.
+Just place your `.dxf` file in the **same folder** as the script — it will be picked up automatically.
 
 1. Download `DXF_to_SACS.py`.
-2. Install the required library via terminal: `pip install ezdxf`
-3. Run the script: `python DXF_to_SACS.py`
-4. **Build Your Own EXE:** If you prefer the convenience of an executable but want 100% security transparency, you can easily compile the raw script yourself using the `pyinstaller` library:
-   ```bash
-   pip install pyinstaller
-   python -m PyInstaller --onefile --icon=icon.ico DXF_to_SACS.py
-   ```
+2. Install the required library: `pip install ezdxf`.
+3. Copy your `.dxf` file into the **same folder** as `DXF_to_SACS.py`
+4. Run the script: `python DXF_to_SACS.py`
+5. A fully compatible `sacinp.*` file will be created in the same folder.
+
+---
+
+### Option B: Ready-to-Use Executable
+
+For users who prefer not to run Python directly.
+
+1. Go to the **Releases** section on the right side of this page.
+2. Download **`v1.2.0.zip`** and extract it anywhere on your computer.
+3. Copy your `.dxf` file into the **same folder** as `DXF_to_SACS.exe`.
+4. Double-click `DXF_to_SACS.exe` and follow the on-screen prompts.
+
+> ⚠️ Windows SmartScreen may flag the file as "unknown publisher" due to the absence of a paid digital certificate. Click **"More info" → "Run anyway"** to proceed safely.
 
 ---
 
@@ -96,4 +96,4 @@ Found a bug, have a feature request, or want to contribute improvements? Feel fr
 
 ---
 
-*Developed by FM – 2026*
+*Developed by FM using IA – 2026*
