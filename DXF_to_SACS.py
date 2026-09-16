@@ -93,7 +93,7 @@ def get_node(point):
     )
 
     if key not in node_dict:
-        node_name = f"J{next_node:03d}"
+        node_name = f"{next_node:04d}"
         node_dict[key] = node_name 
         nodes.append((node_name, key[0], key[1], key[2]))
         next_node += 1
@@ -109,6 +109,7 @@ def format_sacs_coord(val):
             s = str(int(val)) + "."
             
     return f"{s:>7}"
+
 # Storage unit for layer to Group mapping
 detected_groups = set()
 # list to sotre member in order
@@ -162,27 +163,20 @@ num_elementi = len(members)
 
 # Writing SACS geom file
 with open(OUTPUT_FILE, "w") as f:
-    # 1. INITIAL PART: Date and model statistics
-    f.write("**************************************************************************** \n")
-    f.write(f"* {data_oggi} - Node number : {num_nodi} - Element Number:{num_elementi}\n")
     
     # 2. LDOPT BLOCK
-    f.write("**************************************************************************** \n")
-    f.write("LDOPT\n")
+    f.write("LDOPT       NF  1.0280007.849000-1000.00        GLOBMN                         \n")
     
     # 3. OPTIONS BLOCK
-    f.write("**************************************************************************** \n")
-    f.write("OPTIONS      MN              1 1\n")
+    f.write("OPTIONS      MN       SDUB  1010   DC  M    PT  PTPTPT  PTPT           \n")
     
     # 4. DISPLAY LOAD COMBINATION / LCSEL BLOCK
     f.write("*******************************************************************************\n")
-    f.write("* DISPLAY LOAD COMBINATION                      *\n")
+    f.write("*                        DISPLAY LOAD COMBINATION \n")
     f.write("***************************************************************************** \n")
-    f.write("LCSEL\n")
+    f.write("LCSEL           A001\n")
     
     # 5. SECT AND GROUP BLOCK
-    f.write("**************************************************************************** \n")
-    f.write("SECT\n")
     f.write("**************************************************************************** \n")
     f.write("GRUP\n")
 
@@ -200,8 +194,6 @@ with open(OUTPUT_FILE, "w") as f:
     for n_start, n_end, group_id in members_database:
         riga_member = f"MEMBER {n_start:>4}{n_end:>4} {group_id:<3}\n"
         f.write(riga_member)
-    
-    # Note: Old "6. MEMBER BLOCK" loop removed here to prevent duplicate entries!
     
     # 7. SEPARATION LINE BETWEEN MEMBER AND JOINT
     f.write("**************************************************************************** \n")
@@ -226,18 +218,21 @@ with open(OUTPUT_FILE, "w") as f:
     f.write("***************************************************************************** \n")
     f.write("LOADCNDEA1         1.0000                     DEAD                            \n")
     f.write("DEAD                                                                            \n")
-    f.write("DEAD       -Z                               M BML  \n")
+    f.write("DEAD       -Z                                M BML  \n")
     
     # 10. LOAD COMBINATION / LOADCN BLOCK (AFTER LOAD)
     f.write("***************************************************************************** \n")
     f.write(" *                            LOAD COMBINATION                                 \n")
     f.write("*****************************************************************************\n")
-    f.write("LOADCN\n")
+    f.write("LCOMB A001 DEA11.0000\n")
     
     # 11. STANDARD SACS CLOSURE
     f.write("END\n")
+    #  Date and model statistics
+    f.write(f"* {data_oggi} - Node number : {num_nodi} - Element Number:{num_elementi} - FMO \n")
     f.write(" **JNCV** 0 0 0 0 0 0 0 0\n")
     f.write("END\n")
+
 
 print(f"File {OUTPUT_FILE} SUCCESSFULLY GENERATED! Total nodes: {num_nodi}, Total members: {num_elementi}")
 
@@ -253,4 +248,4 @@ if nodi_troppo_vicini:
 
 input("\nProcessing complete! Press ENTER to close this window...")
 
-#   FM – 07/2026 v3.1.0
+#   FM – 07/2026 v1.2.1
